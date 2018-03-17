@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Thread.js Example</title>
+        <script src="thread.js"></script>
+        <style>
+            body {
+                font-family:Arial, Helvetica, sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <h1>Thread-JS Example</h1>
+        
+        <button onclick="example2()">Run Example</button>
+        
+        <hr>
+        
+        <div id="progress">
+        
+            Click the Run Example Button to start.
+        
+        </div>
+        
+        <script>
+        
+
+            function example() {
+
+                var thread = new Thread();
+                var i = 0;
+                var max = 5000000;
+                var el = document.getElementById("progress");
+
+                thread(function() {
+
+                    el.innerHTML = " Progress [ " + i + " / " + max + " ]";                
+                    i += 1;
+                    return i < max;
+
+                })(function() {
+                
+                    document.getElementById("progress").innerHTML += "<br>All done.";
+                    
+                }).run();            
+            }        
+
+            function example2() {
+                fetchExample(function(results) {
+                    console.log(results);
+                });
+            }
+            
+            function fetchExample(callback) {
+
+                var xhr = new XMLHttpRequest();
+                var thread = new Thread();
+                var list = [ "test.txt", "test2.txt"];
+                var results = [];
+                var i = 0;
+
+                thread("fetchLoop",function() {
+                
+                    xhr.open("GET",list[i],true);
+                    xhr.send();
+                
+                })(function(){
+                    
+                    var isReady = xhr.status == "200" && xhr.readyState == "4";
+                    return !isReady;
+
+                })(function() {
+                    
+                    results[i] = xhr.responseText;
+                    i += 1;
+                    return i < list.length ? "fetchLoop" : false;
+                
+                })(function() {
+
+                    callback(results);
+
+                }).run();  
+            }
+
+            
+
+        </script>
+    </body>
+</html>
