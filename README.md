@@ -1,2 +1,2 @@
 # ThreadJS
-A simple way to thread complex loops and async processing
+### A simple way to write threaded loops and async processing
