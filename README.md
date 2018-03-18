@@ -3,20 +3,19 @@
 
 A thread object is used to chain functions together. Each "link" in the chain is considered one step in the process. Each step is called over and over until it returns false or undefined.
 
-psuedo code
 ```javascript
 
 var thread = new Thread();
 
-thread( function() {
+thread(function() {
 
 //Step 1 
 
-})( function () {
+})(function() {
 
 //Step 2
 
-})(function () {
+})(function() {
 
 //Step 3
 
@@ -27,38 +26,45 @@ thread( function() {
 You can also add labels to a step. This allows you to branch back and forth between different steps. 
 
 ```javascript
-var thread = new Thread();
-var x = 0;
-var y = 0;
-var size = 10000; //ten thousand
-var array = [];
+function example(callback) {
+    
+    var thread = new Thread();
+    var x = 0;
+    var y = 0;
+    var size = 10000; //ten thousand
+    var array = [];
 
 
-//here "outer_loop" is a label for Step 1
-thread("outer_loop",function() {
+    //here "outer_loop" is a label for Step 1
+    thread("outer_loop",function() {
 
-    y = 0;
-    array[x] = [];
+        y = 0;
+        array[x] = [];
 
-})(function () {
+    })(function () {
 
-    array[x][y] = x * y;
-    y += 1;
+        array[x][y] = x * y;
+        y += 1;
 
-    //repeat this function while y < size
-    return y < size; 
+        //repeat this function while y < size
+        return y < size; 
 
-})(function() {
+    })(function() {
 
-    x += 1;
-    if (x < size) {
+        x += 1;
+        if (x < size) {
 
-        //jump to the step labeled as "outer_loop"
-        return "outer_loop";
-    }
+            //jump to the step labeled as "outer_loop"
+            return "outer_loop";
+        }
 
-}).run();
+    })(function() {
+    
+        callback(array);
 
+    }).run();
+
+}
 ```
 
 ## Breaking Down a Simple Example
