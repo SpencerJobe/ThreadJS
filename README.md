@@ -27,7 +27,7 @@ You can also add labels to a step. This allows you to branch back and forth betw
 
 ```javascript
 function example(callback) {
-    
+
     var thread = new Thread();
     var x = 0;
     var y = 0;
@@ -99,7 +99,7 @@ function example() {
 }
 </script>
 ```
-You can see in the first step that we are returning `i < max` which means that the thread will repeatedly step 1 while `i` is less than `max`.  Step one listed below:
+You can see in the first step that we are returning `i < max` which means that the thread will repeat step 1 while `i` is less than `max`.  Step one listed below:
 ```javascript 
 function () {
 
