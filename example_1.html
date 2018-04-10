@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 1</title>
+        <script src="thread.v2.js"></script>
+    </head>
+    <body>
+        
+        <h1>Example 1</h1>
+        
+        <button onclick="example()">Run Example</button>
+        <input type="text" value="Scratch Pad">
+        <hr>
+        <div id="progress"></div>
+
+        <script>
+            function example() {
+            
+                var thread = new Thread();
+                var i = 0;
+                var max = 5000000; // 5 million
+                var el = document.getElementById("progress");
+                
+                thread(function() {
+                
+                    el.innerHTML = " Progress [ " + i + " / " + max + " ]"; 
+                    i += 1;
+                    return i < max;
+                
+                })(function() {
+            
+                    el.innerHTML += "<br>All done.";
+            
+                }).run(); 
+            }
+        </script>
+    </body>
+</html>

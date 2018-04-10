@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 1 Bad</title>
+        <script src="thread.js"></script>
+    </head>
+    <body>
+        
+        <h1>Example 1 Bad</h1>
+        
+        <button onclick="example()">Run Example</button>
+        <input type="text" value="Scratch Pad">
+        <hr>
+        <div id="progress"></div>
+
+        <script>
+            function example() {
+            
+                var max = 5000000; // 5 million
+                var el = document.getElementById("progress");
+            
+                for (var i = 0; i < max; i += 1) {
+
+                    el.innerHTML = " Progress [ " + i + " / " + max + " ]"; 
+                    
+                }
+
+                el.innerHTML += "<br>All done.";
+            }
+        </script>
+    </body>
+</html>

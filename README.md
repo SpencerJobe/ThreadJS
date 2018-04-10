@@ -121,11 +121,6 @@ This step doesn't return anything. So, the return value is undefined. The thread
 
 
 ### Timing
-The thread object has two time properties called `sprint` and `sleep`.  The `sprint` property is the max number of milliseconds that a thread should run before sleeping. And, thus, `sleep` is the number of milliseconds the thread should rest before resuming. 
+The thread library has two time internal variables called `gSprint` and `gSleep`.  The `gSprint` variable is the max number of milliseconds that a thread should run before sleeping. And, thus, `gSleep` is the number of milliseconds the thread should rest before resuming. 
 
-The `sprint` property is set to 200 milliseconds by default and the `sleep` property is set to 100 milliseconds by default. These properties can be assigned when creating a new thread as seen below. 
-```javascript
-// Thread(<sprint>, <sleep>);
-var thread = new Thread(500,1000);
-```
-This can help you dial back the speed of a thread. Pay close attention to these values if you modify them. Long sprint times will make the webpage feel clunky and slow.
+The `gSprint` variable is set to 100 milliseconds by default and the `gSleep` variable is set to 800 milliseconds by default. These properties can be adjusted from the `thread.js` file.  This can help you fine-tune the speed of threads. Pay close attention to these values if you modify them. Long sprint times will make the webpage feel clunky and slow.

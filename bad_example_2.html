@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 2 Bad</title>
+        <script src="thread.js"></script>
+    </head>
+    <body>
+        
+        <h1>Example 2 Bad</h1>
+        
+        <button onclick="example()">Run Example</button>
+        <input type="text" value="Scratch Pad">
+        <hr>
+        
+        <div id="progress"></div>
+
+        <script>
+            function example() {
+                var size = 10000;
+                var array = [];
+                var el = document.getElementById("progress");
+
+                for (var x = 0; x < size; x += 1) {
+                   
+                    array[x] = [];
+                   
+                    for(var y = 0; y < size; y += 1) {
+                   
+                        array[x][y] = x * y;
+                        el.innerHTML = "[X,Y] = X*Y  -> [" + x + "," + y + "] = " + array[x][y];   
+                    }
+                }
+                el.innerHTML = "process complete. Check Console.";
+                console.log(array);
+                    
+
+            }
+        </script>
+    </body>
+</html>

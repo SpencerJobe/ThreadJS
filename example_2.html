@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 2</title>
+        <script src="thread.v2.js"></script>
+    </head>
+    <body>
+        
+        <h1>Example 2</h1>
+        
+        <button onclick="example()">Run Example</button>
+        <input type="text" value="Scratch Pad">
+        <hr>
+        
+        <div id="progress"></div>
+
+        <script>
+            function example() {
+
+                var thread = new Thread();
+                var x = 0;
+                var y = 0;
+                var size = 10000; //ten thousand
+                var array = [];
+                var el = document.getElementById("progress");
+
+                //here "outer_loop" is a label for Step 1
+                thread("outer_loop",function() {
+
+                    y = 0;
+                    array[x] = [];
+
+                })(function () {
+
+                    array[x][y] = x * y;
+                    el.innerHTML = "[X,Y] = X*Y  -> [" + x + "," + y + "] = " + array[x][y];
+
+                    y += 1;
+                    //repeat this function while y < size
+                    return y < size; 
+
+                })(function() {
+
+                    x += 1;
+
+                    if (x < size) {
+
+                        //jump to the step labeled as "outer_loop"
+                        return "outer_loop";
+                    }
+
+                })(function() {
+                    el.innerHTML = "process complete. Check Console.";
+                    console.log(array);
+                    
+                }).run();
+
+            }
+        </script>
+    </body>
+</html>

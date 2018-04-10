@@ -29,13 +29,17 @@ DESCRIPTION: A simple way the write threaded loops and async processing.
 
 ---------------------------------------------------------------------------------------------------------*/
 (function loadThread(win) {
+    
+    var gSprint = 100;
+    var gSleep = 800;
+    var gActiveThreads = [];
+    var gTargetIndex = 0;
+    var gUpdatedList = [];
 
-    var Thread = function (sprint, sleep) {
+    var Thread = function () {
                 
         var self = this;
         
-        self.sprint = sprint || 200;
-        self.sleep = sleep || 100;
         self.steps = [];
         self.labels = {};
         self.index = 0;
@@ -56,50 +60,72 @@ DESCRIPTION: A simple way the write threaded loops and async processing.
         };
         
         proxy.run = function () {
-        
-            self.run();
+
+            gActiveThreads.push(self);
         };
         
         return proxy;
     };
 
     Thread.prototype.run = function () {
-        
-        var self = this;
-        var time = Date.now();
-        var result;
 
-        while (Date.now() - time < self.sprint) {
-            
-            result = self.steps[self.index]();
-            
-            if (typeof result === "string") {
+        var result = this.steps[this.index]();
 
-                if (self.labels.hasOwnProperty(result)) {
-                    
-                    self.index = self.labels[result];
-                } else {
+        if (typeof result === "string") {
 
-                    throw new Error("Thread does not have label '" + result + "'");
-                }
-            } else if (result === false || result === undefined) {
-        
-                self.index += 1;
-        
-                if (self.index >= self.steps.length) {
-        
-                    return;
-                }
-                break;
+            if (this.labels.hasOwnProperty(result)) {
+                
+                this.index = this.labels[result];
+            } else {
+
+                throw new Error("Thread does not have label '" + result + "'");
+            }
+        } else if (result === false || result === undefined) {
+    
+            this.index += 1;
+        }
+    };
+
+    var runThreads = function (time) {
+
+        var thread;    
+
+        while (gTargetIndex < gActiveThreads.length) {
+
+            thread = gActiveThreads[gTargetIndex];
+            thread.run();
+            gTargetIndex += 1;
+
+            if (thread.index < thread.steps.length) {
+
+                gUpdatedList.unshift(thread);
+            }
+
+            if (Date.now()- time > gSprint) {
+
+                return false;
             }
         }
-        
-        setTimeout(function() {
-        
-            self.run();
 
-        },self.sleep);
+        gTargetIndex = 0;
+        gActiveThreads = gUpdatedList;
+        gUpdatedList = [];
+        return true;
     };
+
+    var threadManager = function() {
+        var time = Date.now();
+
+        if (gActiveThreads.length > 0) {
+        
+            while(Date.now()-time < gSprint) {
+                if (! runThreads(time)) { break; }
+             }
+        }
+        setTimeout(threadManager,gSleep);
+    };
+
+    setTimeout(threadManager,100);
 
     win.Thread = Thread;
 

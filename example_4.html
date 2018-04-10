@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 4</title>
+        <script src="thread.v2.js"></script>
+    </head>
+    <body>
+        
+        <h1>Example 4</h1>
+        
+        <button onclick="addThread()">Add Thread</button>
+        <input type="text" value="Scratch Pad">
+        <hr>
+        <div id="progress"></div>
+
+        <script>
+            
+            var gCount = 0;
+            
+            function addThread() {
+                
+                var container = document.getElementById("progress");
+                var el = document.createElement("div");
+                
+                container.appendChild(el);
+                gCount += 1;
+                example(el, "Thread_" + gCount);
+            }
+
+            function example(el, name) {
+                
+                var time = Date.now();
+                var thread = new Thread();
+                var i = 0;
+                var max = 5000000; // 5 million
+                
+                el.innerHTML = name + "[ " + i + " / " + max + " ]"; 
+
+                thread(function() {
+
+                    if (Date.now() - time > 1000) {
+                        time = Date.now();
+                        el.innerHTML = name + "[ " + i + " / " + max + " ]"; 
+                    }
+                    i += 1;
+                    return i < max;
+                
+                })(function() {
+            
+                    el.innerHTML = name + " finished.";
+            
+                }).run(); 
+            }
+        </script>
+    </body>
+</html>
